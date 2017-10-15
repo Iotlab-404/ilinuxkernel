@@ -30,12 +30,12 @@
  int main()
  {
 	unsigned long tmp;
-	tmp = 0x12345678;
+	tmp = 0x12345678deadbeef;
 	static int cr_fd = - 1;
 
-	asm("movl %ebp, %ebx\n movl %ebx, addr");
+	asm("movq %rbp, %rbx\n movq %rbx, addr");
 
-	printf("\n%%ebp:0x%08lX\n", addr);
+	printf("\n%%rbp:0x%08lX\n", addr);
 	printf("tmp address:0x%08lX\n", &tmp);
 	FILE_TO_BUF(REGISTERINFO, cr_fd);
 
