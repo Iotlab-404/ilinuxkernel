@@ -9,12 +9,7 @@
 #include <asm/paravirt.h>
 #include <linux/seq_file.h>
 
- static char modname[] = "sys_reg";
- struct gdtr_struct{
-	short limit;
-	unsigned long address __attribute__((packed));
-  };
-
+ static char modname[] = "sys_reg_info";
  static unsigned int cr0,cr3,cr4;
 // static struct gdtr_struct gdtr;
 static struct desc_ptr gdtr;
@@ -45,10 +40,11 @@ static int mytest_proc_open(struct inode *inode, struct file *file)
 	return single_open(file, my_proc_show, inode->i_private);
 }
 
-static int mytest_proc_write(struct seq_file *seq, const void *data, size_t len)
+#define PROC_WRITE_INFO "mytest_proc_write\n"
+static int mytest_proc_write(struct file *file, char __user *buf, size_t size, loff_t *ppos)
 {
-	seq_printf(seq, "my_test_proc_write\n");
-	return 0;
+	printk("<1>"PROC_WRITE_INFO);
+	return size;  //don't return 0,because write syscall will block all the time 
 }
 
 static const struct file_operations mytest_proc_fops = {
